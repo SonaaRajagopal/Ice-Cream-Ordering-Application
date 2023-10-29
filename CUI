@@ -1,0 +1,347 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
+// Define the abstract DessertItem class as the base class
+abstract class DessertItem {
+    private String name;
+
+    // Private field to store dessert name1
+
+    public DessertItem(String name) {
+        this.name = name;
+    }
+
+    // Abstract method to calculate the cost of the dessert item
+
+    public abstract double getCost();
+
+    // Getter method for dessert name
+
+    public String getName() {
+        return name;
+    }
+}
+
+// Define the IceCream class to represent ice cream flavors (inherits from DessertItem)
+class IceCream extends DessertItem {
+    private double cost;
+
+    // Private field to store ice cream cost
+
+    public IceCream(String flavor, double cost) {
+        super(flavor);
+
+        // Call superclass constructor using 'super' keyword
+
+        this.cost = cost;
+    }
+
+    // Override the abstract method to calculate the cost
+
+    @Override
+    public double getCost() {
+        return cost;
+    }
+}
+
+// Define the Topping class to represent toppings (inherits from DessertItem)
+class Topping extends DessertItem {
+    private double cost;
+
+    // Private field to store topping cost
+
+    public Topping(String name, double cost) {
+        super(name);
+
+        // Call superclass constructor using 'super' keyword
+
+        this.cost = cost;
+    }
+
+    // Override the abstract method to calculate the cost
+    @Override
+    public double getCost() {
+        return cost;
+    }
+}
+
+// Define the PartyDessert class to represent items related to the ice cream party (inherits from DessertItem)
+class PartyDessert extends DessertItem {
+    private double cost; // Private field to store party dessert cost
+
+    public PartyDessert(String name, double cost) {
+        super(name); // Call superclass constructor using 'super' keyword
+        this.cost = cost;
+    }
+
+    // Override the abstract method to calculate the cost
+    @Override
+    public double getCost() {
+        return cost;
+    }
+}
+
+// Define the OrderItem class to represent an item in the order
+class OrderItem {
+    private IceCream iceCream; // Private field to store IceCream object
+    private List<Topping> toppings; // Private field to store a list of Topping objects
+
+    public OrderItem(IceCream iceCream) {
+        this.iceCream = iceCream;
+        this.toppings = new ArrayList<>(); // Initialize toppings as an empty ArrayList
+    }
+
+    public IceCream getIceCream() {
+        return iceCream;
+    }
+
+    public List<Topping> getToppings() {
+        return toppings;
+    }
+
+    public void addTopping(Topping topping) {
+        toppings.add(topping);
+    }
+
+    // Method to calculate the total cost of the order item
+    public double calculateCost() {
+        double totalCost = iceCream.getCost(); // Initialize total cost with the ice cream cost
+        for (Topping topping : toppings) {
+            totalCost += topping.getCost(); // Add the cost of each topping
+        }
+        return totalCost; // Return the total cost
+    }
+}
+
+// Define the main class
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in); // Create a Scanner object for user input
+        List<IceCream> availableIceCreams = createIceCreamMenu(); // Initialize available ice cream flavors
+        List<Topping> availableToppings = createToppingMenu(); // Initialize available toppings
+        List<OrderItem> orderItems = new ArrayList<>(); // Initialize the list of order items
+
+        System.out.println("Welcome to the Ice Cream Paradise!");
+        System.out.println("Indulge in a world of sweet delights and frozen fantasies as you embark on a journey through our delectable menu.");
+        System.out.println("So, sit back, relax as we dive into a world of sweetness!");
+
+        while (true) {
+            int choice = displayMainMenu(scanner); // Display and get the user's choice from the main menu
+
+            try {
+                switch (choice) {
+                    case 1:
+                        orderIceCream(scanner, availableIceCreams, orderItems); // Order ice cream
+                        break;
+                    case 2:
+                        addToppingsToOrder(scanner, availableToppings, orderItems); // Add toppings to the order
+                        break;
+                    case 3:
+                        reviewAndFinalizeOrder(orderItems, scanner); // Reviewing and finalizing the order
+                        return;
+                    case 4:
+                        System.out.println("Exiting the Ice Cream Order System. Goodbye!");
+                        System.exit(0); // Exit the program
+                    default:
+                        System.out.println("Invalid choice. Please select a valid option.");
+                }
+            } catch (InputMismatchException e) {
+
+                // Exception handling for input mismatch
+
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine(); // Clear the invalid input from the scanner buffer
+            }
+        }
+    }
+
+    private static List<IceCream> createIceCreamMenu() {
+        List<IceCream> iceCreams = new ArrayList<>();
+        // Add various ice cream flavors and their prices to the list
+        iceCreams.add(new IceCream("Vanilla", 100.0));
+        iceCreams.add(new IceCream("Chocolate", 125.0));
+        iceCreams.add(new IceCream("Strawberry", 150.0));
+        iceCreams.add(new IceCream("Mango Tango", 140.0));
+        iceCreams.add(new IceCream("Pistachio Paradise", 130.0));
+        iceCreams.add(new IceCream("Caramel Crunch Delight", 160.0));
+        iceCreams.add(new IceCream("Raspberry Ripple Rapture", 155.0));
+        iceCreams.add(new IceCream("Coconut Bliss", 145.0));
+        iceCreams.add(new IceCream("Blueberry Cheesecake Dream", 170.0));
+        iceCreams.add(new IceCream("Rocky Road Adventure", 155.0));
+        iceCreams.add(new IceCream("Tropical Paradise", 160.0));
+        iceCreams.add(new IceCream("Cookies and Cream Fiesta", 135.0));
+        iceCreams.add(new IceCream("Mint Chocolate Chip Extravaganza", 140.0));
+
+        return iceCreams;
+    }
+
+    private static List<Topping> createToppingMenu() {
+        List<Topping> toppings = new ArrayList<>();
+        // Add various toppings and their prices to the list
+        toppings.add(new Topping("Sprinkles", 10.0));
+        toppings.add(new Topping("Chocolate Sauce", 15.0));
+        toppings.add(new Topping("Whipped Cream", 20.0));
+        toppings.add(new Topping("Caramel Drizzle", 18.0));
+        toppings.add(new Topping("Toasted Coconut", 12.0));
+        toppings.add(new Topping("Fruit Medley", 25.0));
+        toppings.add(new Topping("Honeycomb Crunch", 22.0));
+        toppings.add(new Topping("Mint Choc Swirl", 16.0));
+        toppings.add(new Topping("Brownie Bits", 17.0));
+        toppings.add(new Topping("Gummy Bears", 14.0));
+
+        return toppings;
+    }
+
+    private static int displayMainMenu(Scanner scanner) {
+        // Display the main menu options and prompt for input
+        System.out.println("\nMain Menu:");
+        System.out.println("1. Order Ice Cream");
+        System.out.println("2. Add Toppings");
+        System.out.println("3. Review and Finalize Order");
+        System.out.println("4. Exit");
+        System.out.print("Enter your choice: ");
+        return scanner.nextInt();
+    }
+
+    private static void orderIceCream(Scanner scanner, List<IceCream> iceCreams, List<OrderItem> orderItems) {
+        System.out.println("\nAvailable Ice Cream Flavors:");
+        for (int i = 0; i < iceCreams.size(); i++) {
+            System.out.println((i + 1) + ". " + iceCreams.get(i).getName() + " (₹ " + iceCreams.get(i).getCost() + ")");
+        }
+
+        System.out.print("Enter the number of the ice cream flavor you want: ");
+        int flavorChoice = scanner.nextInt();
+        if (flavorChoice < 1 || flavorChoice > iceCreams.size()) {
+            System.out.println("Invalid flavor choice. Please choose a valid option.");
+            return;
+        }
+
+        IceCream selectedIceCream = iceCreams.get(flavorChoice - 1);
+        orderItems.add(new OrderItem(selectedIceCream));
+        System.out.println("You've added " + selectedIceCream.getName() + " to your order.");
+    }
+
+    private static void addToppingsToOrder(Scanner scanner, List<Topping> toppings, List<OrderItem> orderItems) {
+        if (orderItems.isEmpty()) {
+            System.out.println("You need to order ice cream first before adding toppings.");
+            return;
+        }
+
+        System.out.println("\nAvailable Toppings:");
+        for (int i = 0; i < toppings.size(); i++) {
+            System.out.println((i + 1) + ". " + toppings.get(i).getName() + " (₹" + toppings.get(i).getCost() + ")");
+        }
+
+        while (true) {
+            System.out.print("Enter the number of the topping you want to add (or 0 to finish): ");
+            int toppingChoice = scanner.nextInt();
+            if (toppingChoice == 0) {
+                break;
+            }
+            if (toppingChoice < 1 || toppingChoice > toppings.size()) {
+                System.out.println("Invalid topping choice. Please choose a valid option or enter 0 to finish.");
+            } else {
+                Topping selectedTopping = toppings.get(toppingChoice - 1);
+                OrderItem currentItem = orderItems.get(orderItems.size() - 1);
+                currentItem.addTopping(selectedTopping);
+                System.out.println("You've added " + selectedTopping.getName() + " to your order.");
+            }
+        }
+    }
+
+    private static void reviewAndFinalizeOrder(List<OrderItem> orderItems, Scanner scanner) {
+        if (orderItems.isEmpty()) {
+            System.out.println("You haven't ordered anything. Exiting.");
+            return;
+        }
+
+        System.out.println("\nOrder Summary:");
+        double totalCost = 0.0;
+        for (int i = 0; i < orderItems.size(); i++) {
+            OrderItem item = orderItems.get(i);
+            System.out.println("Item " + (i + 1) + ": " + item.getIceCream().getName());
+            System.out.println("Toppings:");
+            for (Topping topping : item.getToppings()) {
+                System.out.println("- " + topping.getName());
+            }
+            double itemCost = item.calculateCost();
+            totalCost += itemCost;
+            System.out.println("Item Cost: ₹" + itemCost);
+        }
+
+        System.out.println("\nTotal Cost of Items: ₹" + totalCost);
+
+        // Ask the user if they want home delivery
+        System.out.print("Do you want home delivery (Rs. 50 extra)? (yes/no): ");
+        String deliveryChoice = scanner.next().toLowerCase();
+        double deliveryCost = 0.0;
+
+        if (deliveryChoice.equals("yes")) {
+            deliveryCost = 50.0;
+            System.out.println("Home Delivery Cost: ₹" + String.format("%.2f", deliveryCost));
+        } else if (!deliveryChoice.equals("no")) {
+            System.out.println("Invalid choice. No delivery charge applied.");
+        }
+
+        double finalCost = totalCost + deliveryCost;
+
+        // Ask the user if they want to book an ice cream party
+        System.out.print("Do you want to book an ice cream party and rent a room for Rs.1000? (yes/no): ");
+        String partyChoice = scanner.next().toLowerCase();
+        double partyCost = 0.0;
+
+        if (partyChoice.equals("yes")) {
+            System.out.print("Do you want balloons for the party for Rs.500? (yes/no): ");
+            String balloonChoice = scanner.next().toLowerCase();
+            if (balloonChoice.equals("yes")) {
+                partyCost += 500.0; // Balloons and room decors
+                System.out.println("Balloons and Room Decorations Cost: ₹" + String.format("%.2f", 500.0));
+            }
+
+            System.out.print("Do you want music and DJ for the party for Rs.2000? (yes/no): ");
+            String musicChoice = scanner.next().toLowerCase();
+            if (musicChoice.equals("yes")) {
+                partyCost += 2000.0; // DJ and music
+                System.out.println("DJ and Music Cost: ₹" + String.format("%.2f", 2000.0));
+            }
+
+            partyCost += 1000.0; // Room rental
+            System.out.println("Room Rental Cost: ₹" + String.format("%.2f", 1000.0));
+            System.out.println("Ice Cream Party Cost: ₹" + String.format("%.2f", partyCost));
+        } else if (!partyChoice.equals("no")) {
+            System.out.println("Invalid choice. No party charge applied.");
+        }
+
+        finalCost += partyCost;
+
+        System.out.println("\nFinal Cost: ₹" + String.format("%.2f", finalCost));
+        System.out.println("Thank you for ordering from the Ice Cream Shop!");
+        System.out.println();
+        System.out.println("Select payment method: ");
+        System.out.println("1. Cash (5% discount applicable) ");
+        System.out.println("2. Credit card (10% tax applicable)");
+        String paymentMethod = scanner.next().toLowerCase();
+
+        double discount = 0.0;
+        double tax = 0.0;
+
+        if (paymentMethod.equals("1")) {
+            // Apply a discount for cash payment
+            discount = totalCost * 0.05; // Assuming a 5% discount
+            System.out.println("Cash Discount: -₹" + String.format("%.2f", discount));
+        } else if (paymentMethod.equals("2")) {
+            // Apply a tax for credit card payment
+            tax = totalCost * 0.10; // Assuming a 10% tax
+            System.out.println("Credit Card Tax: +₹" + String.format("%.2f", tax));
+        } else {
+            System.out.println("Invalid payment method. No discount or tax applied.");
+        }
+
+        finalCost = finalCost - discount + tax;
+
+        System.out.println("\nFinal Cost after Payment Adjustment: ₹" + String.format("%.2f", finalCost));
+        System.out.println("Thank you for your payment!");
+    }
+}

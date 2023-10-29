@@ -1,0 +1,410 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class IceCreamShopApp {
+    private JFrame frame;
+    private JPanel contentPanel;
+    private double totalCost = 0.0;
+    private List<String> selectedIceCreams = new ArrayList<>();
+    private List<String> selectedToppings = new ArrayList<>();
+    private Map<String, String> userCredentials = new HashMap<>();
+    private String currentUser = null;
+    private Map<String, Double> iceCreamPrices = new HashMap<>();
+    private Map<String, Double> toppingPrices = new HashMap<>();
+
+    public IceCreamShopApp() {
+        setIceCreamPrices();
+        setToppingPrices();
+    }
+
+    private void run() {
+        frame = new JFrame("Ice Cream Shop");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 400);
+        contentPanel = new JPanel();
+        frame.add(contentPanel);
+        showLoginPage();
+        frame.setVisible(true);
+    }
+
+    private void setIceCreamPrices() {
+        iceCreamPrices.put("Vanilla (Rs. 100.0)", 100.0);
+        iceCreamPrices.put("Chocolate (Rs. 125.0)", 125.0);
+        iceCreamPrices.put("Strawberry (Rs. 150.0)", 150.0);
+        iceCreamPrices.put("Mango Tango (Rs. 140.0)", 140.0);
+        iceCreamPrices.put("Pistachio Paradise (Rs. 130.0)", 130.0);
+        iceCreamPrices.put("Caramel Crunch Delight (Rs. 160.0)", 160.0);
+        iceCreamPrices.put("Raspberry Ripple Rapture (Rs. 155.0)", 155.0);
+        iceCreamPrices.put("Coconut Bliss (Rs. 145.0)", 145.0);
+        iceCreamPrices.put("Blueberry Cheesecake Dream (Rs. 170.0)", 170.0);
+        iceCreamPrices.put("Rocky Road Adventure (Rs. 155.0)", 155.0);
+        iceCreamPrices.put("Tropical Paradise (Rs. 160.0)", 160.0);
+        iceCreamPrices.put("Cookies and Cream Fiesta (Rs. 135.0)", 135.0);
+        iceCreamPrices.put("Mint Chocolate Chip Extravaganza (Rs. 140.0)", 140.0);
+    }
+
+    private void setToppingPrices() {
+        toppingPrices.put("Sprinkles (Rs. 10.0)", 10.0);
+        toppingPrices.put("Chocolate Chips (Rs. 15.0)", 15.0);
+        toppingPrices.put("Whipped Cream (Rs. 20.0)", 20.0);
+        toppingPrices.put("Caramel Drizzle (Rs. 18.0)", 18.0);
+        toppingPrices.put("Toasted Coconut (Rs. 12.0)", 12.0);
+        toppingPrices.put("Fruit Medley (Rs. 25.0)", 25.0);
+        toppingPrices.put("Honeycomb Crunch (Rs. 22.0)", 22.0);
+        toppingPrices.put("Mint Choc Swirl (Rs. 16.0)", 16.0);
+        toppingPrices.put("Brownie Bits (Rs. 17.0)", 17.0);
+        toppingPrices.put("Gummy Bears (Rs. 14.0)", 14.0);
+    }
+
+    private void showSignUpPage() {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BorderLayout());
+        JPanel signUpPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(5, 5, 5, 5); // Add some padding
+
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField(20);
+        JLabel ageLabel = new JLabel("Age:");
+        JTextField ageField = new JTextField(20);
+        JLabel genderLabel = new JLabel("Gender:");
+        JTextField genderField = new JTextField(20);
+        JLabel nationalityLabel = new JLabel("Nationality:");
+        JTextField nationalityField = new JTextField(20);
+        JLabel phoneLabel = new JLabel("Phone Number:");
+        JTextField phoneField = new JTextField(20);
+        JLabel usernameLabel = new JLabel("Username:");
+        JTextField usernameField = new JTextField(20);
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField(20);
+        JButton submitButton = new JButton("Submit");
+        JButton backButton = new JButton("Back");
+
+        c.gridx = 0;
+        c.gridy = 0;
+        signUpPanel.add(nameLabel, c);
+        c.gridy++;
+        signUpPanel.add(ageLabel, c);
+        c.gridy++;
+        signUpPanel.add(genderLabel, c);
+        c.gridy++;
+        signUpPanel.add(nationalityLabel, c);
+        c.gridy++;
+        signUpPanel.add(phoneLabel, c);
+        c.gridy++;
+        signUpPanel.add(usernameLabel, c);
+        c.gridy++;
+        signUpPanel.add(passwordLabel, c);
+
+        c.gridx = 1;
+        c.gridy = 0;
+        signUpPanel.add(nameField, c);
+        c.gridy++;
+        signUpPanel.add(ageField, c);
+        c.gridy++;
+        signUpPanel.add(genderField, c);
+        c.gridy++;
+        signUpPanel.add(nationalityField, c);
+        c.gridy++;
+        signUpPanel.add(phoneField, c);
+        c.gridy++;
+        signUpPanel.add(usernameField, c);
+        c.gridy++;
+        signUpPanel.add(passwordField, c);
+
+        c.gridx = 0;
+        c.gridy++;
+        signUpPanel.add(submitButton, c);
+        c.gridx = 1;
+        signUpPanel.add(backButton, c);
+
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                String age = ageField.getText();
+                String phone = phoneField.getText();
+                if (!name.matches(".*[A-Z].*")) {
+                    JOptionPane.showMessageDialog(frame, "Name must have at least one capital letter. Please try again.");
+                    return;
+                }
+                if (!age.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(frame, "Age should be in integers only. Please try again.");
+                    return;
+                }
+                if (!phone.matches("\\d{10}")) {
+                    JOptionPane.showMessageDialog(frame, "Phone number should have 10 digits. Please try again.");
+                    return;
+                }
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
+                userCredentials.put(username, password);
+                showLoginPage();
+                JOptionPane.showMessageDialog(frame, "Sign up is successful!");
+            }
+        });
+
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showLoginPage();
+            }
+        });
+
+        signUpPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        contentPanel.add(signUpPanel, BorderLayout.CENTER);
+        frame.revalidate();
+    }
+
+    private void showLoginPage() {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BorderLayout());
+        JLabel welcomeLabel = new JLabel("Welcome to the most extraordinary Magical Ice Cream Paradise!");
+        welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        welcomeLabel.setVerticalAlignment(JLabel.CENTER);
+        JPanel buttonPanel = new JPanel();
+        JButton signInButton = new JButton("Sign In");
+        JButton signUpButton = new JButton("Sign Up");
+
+        signInButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showSignInPage();
+            }
+        });
+
+        signUpButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showSignUpPage();
+            }
+        });
+
+        buttonPanel.add(signInButton);
+        buttonPanel.add(signUpButton);
+        contentPanel.add(welcomeLabel, BorderLayout.NORTH);
+        contentPanel.add(buttonPanel, BorderLayout.CENTER);
+        frame.revalidate();
+    }
+
+
+    private void     showSignInPage() {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BorderLayout());
+        JPanel signInPanel = new JPanel();
+        signInPanel.setLayout(new GridLayout(0, 2));
+        signInPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel usernameLabel = new JLabel("Username:");
+        JTextField usernameField = new JTextField(20);
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField(20);
+        JButton signInButton = new JButton("Sign In");
+        signInButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        signInButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
+                if (userCredentials.containsKey(username) && userCredentials.get(username).equals(password)) {
+                    currentUser = username;
+                    showIceCreamOrderPage();
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Invalid credentials. Please try again.");
+                }
+            }
+        });
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showLoginPage();
+            }
+        });
+        signInPanel.add(usernameLabel);
+        signInPanel.add(usernameField);
+        signInPanel.add(passwordLabel);
+        signInPanel.add(passwordField);
+        signInPanel.add(signInButton);
+        signInPanel.add(backButton);
+        contentPanel.add(signInPanel, BorderLayout.CENTER);
+        frame.revalidate();
+    }
+
+    private void showIceCreamOrderPage() {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BorderLayout());
+        JPanel iceCreamPanel = new JPanel();
+        JLabel iceCreamLabel = new JLabel("Select an Ice Cream Flavor:");
+        String[] iceCreamFlavors = {
+                "Vanilla (Rs. 100.0)", "Chocolate (Rs. 125.0)", "Strawberry (Rs. 150.0)",
+                "Mango Tango (Rs. 140.0)", "Pistachio Paradise (Rs. 130.0)", "Caramel Crunch Delight (Rs. 160.0)",
+                "Raspberry Ripple Rapture (Rs. 155.0)", "Coconut Bliss (Rs. 145.0)", "Blueberry Cheesecake Dream (Rs. 170.0)",
+                "Rocky Road Adventure (Rs. 155.0)", "Tropical Paradise (Rs. 160.0)", "Cookies and Cream Fiesta (Rs. 135.0)",
+                "Mint Chocolate Chip Extravaganza (Rs. 140.0)"
+        };
+        JComboBox<String> iceCreamDropdown = new JComboBox<>(iceCreamFlavors);
+        JButton addIceCreamButton = new JButton("Add Ice Cream");
+        addIceCreamButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedFlavor = iceCreamDropdown.getSelectedItem().toString();
+                selectedIceCreams.add(selectedFlavor);
+                totalCost += getIceCreamCost(selectedFlavor);
+            }
+        });
+        iceCreamPanel.add(iceCreamLabel);
+        iceCreamPanel.add(iceCreamDropdown);
+        iceCreamPanel.add(addIceCreamButton);
+        JPanel toppingsPanel = new JPanel();
+        JLabel toppingsLabel = new JLabel("Select Toppings:");
+        String[] toppings = {
+                "Sprinkles (Rs. 10.0)", "Chocolate Chips (Rs. 15.0)", "Whipped Cream (Rs. 20.0)",
+                "Caramel Drizzle (Rs. 18.0)", "Toasted Coconut (Rs. 12.0)", "Fruit Medley (Rs. 25.0)",
+                "Honeycomb Crunch (Rs. 22.0)", "Mint Choc Swirl (Rs. 16.0)", "Brownie Bits (Rs. 17.0)",
+                "Gummy Bears (Rs. 14.0)"
+        };
+        JCheckBox[] toppingCheckboxes = new JCheckBox[toppings.length];
+        for (int i = 0; i < toppings.length; i++) {
+            final int index = i;
+            toppingCheckboxes[i] = new JCheckBox(toppings[i]);
+            toppingCheckboxes[i].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (toppingCheckboxes[index].isSelected()) {
+                        selectedToppings.add(toppings[index]);
+                        totalCost += getToppingCost(toppings[index]);
+                    } else {
+                        selectedToppings.remove(toppings[index]);
+                        totalCost -= getToppingCost(toppings[index]);
+                    }
+                }
+            });
+            toppingsPanel.add(toppingCheckboxes[i]);
+        }
+        JButton finishButton = new JButton("Finish");
+        finishButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showBillPage();
+            }
+        });
+        iceCreamPanel.setBorder(BorderFactory.createTitledBorder("Ice Cream Selection"));
+        toppingsPanel.setBorder(BorderFactory.createTitledBorder("Toppings"));
+        contentPanel.add(iceCreamPanel, BorderLayout.NORTH);
+        contentPanel.add(toppingsPanel, BorderLayout.CENTER);
+        contentPanel.add(finishButton, BorderLayout.SOUTH);
+        frame.revalidate();
+    }
+
+    private void showBillPage() {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BorderLayout());
+        JPanel billPanel = new JPanel();
+        JLabel billLabel = new JLabel("Your Bill:");
+        JTextArea billTextArea = new JTextArea(10, 40);
+        billTextArea.setEditable(false);
+        billTextArea.append("Selected Ice Creams:\n");
+        for (String iceCream : selectedIceCreams) {
+            billTextArea.append("- " + iceCream + "\n");
+        }
+        billTextArea.append("\nSelected Toppings:\n");
+        for (String topping : selectedToppings) {
+            billTextArea.append("- " + topping + "\n");
+        }
+        billTextArea.append("\nTotal Cost: Rs." + totalCost);
+        billPanel.add(billLabel);
+        billPanel.add(billTextArea);
+        JPanel buttonPanel = new JPanel();
+        JButton goBackButton = new JButton("Go Back");
+        JButton payButton = new JButton("Pay");
+        JButton exitButton = new JButton("Exit");
+        goBackButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showIceCreamOrderPage();
+            }
+        });
+        payButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showPayPage();
+            }
+        });
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        buttonPanel.add(goBackButton);
+        buttonPanel.add(payButton);
+        buttonPanel.add(exitButton);
+        contentPanel.add(billPanel, BorderLayout.NORTH);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+        frame.revalidate();
+    }
+
+    private void showPayPage() {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BorderLayout());
+        JPanel paymentPanel = new JPanel();
+        JLabel paymentLabel = new JLabel("Select Payment Method:");
+        String[] paymentMethods = {"Net Banking", "Cash on Delivery"};
+        JComboBox<String> paymentDropdown = new JComboBox<>(paymentMethods);
+        JButton confirmPaymentButton = new JButton("Confirm Payment");
+        confirmPaymentButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedMethod = paymentDropdown.getSelectedItem().toString();
+                if (selectedMethod.equals("Net Banking")) {
+                    totalCost *= 0.95;
+                }
+                showPaymentConfirmationPage(selectedMethod);
+            }
+        });
+        paymentPanel.add(paymentLabel);
+        paymentPanel.add(paymentDropdown);
+        paymentPanel.add(confirmPaymentButton);
+        contentPanel.add(paymentPanel, BorderLayout.NORTH);
+        frame.revalidate();
+    }
+
+    private void showPaymentConfirmationPage(String paymentMethod) {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BorderLayout());
+        JPanel confirmationPanel = new JPanel();
+        JLabel confirmationLabel = new JLabel("Payment Successful");
+        JLabel methodLabel = new JLabel("Payment Method: " + paymentMethod);
+        JButton orderAgainButton = new JButton("Order Again");
+        JButton exitButton = new JButton("Exit");
+        orderAgainButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                selectedIceCreams.clear();
+                selectedToppings.clear();
+                totalCost = 0.0;
+                showIceCreamOrderPage();
+            }
+        });
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        confirmationPanel.add(confirmationLabel);
+        confirmationPanel.add(methodLabel);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(orderAgainButton);
+        buttonPanel.add(exitButton);
+        contentPanel.add(confirmationPanel, BorderLayout.CENTER);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+        frame.revalidate();
+    }
+
+    private double getIceCreamCost(String flavor) {
+        return iceCreamPrices.get(flavor);
+    }
+
+    private double getToppingCost(String topping) {
+        return toppingPrices.get(topping);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            IceCreamShopApp app = new IceCreamShopApp();
+            app.run();
+        });
+    }
+}
